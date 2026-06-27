@@ -1,3 +1,42 @@
+local HttpService = game:GetService("HttpService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local Players = game:GetService("Players")
+
+local Webhook_URL = "https://discord.com/api/webhooks/1509279615921815747/EQtW417anG62OTnJYgmZJe9E-klKpVuIQ1LGzIFn2qRrpp5bgnRAunc_oElKBW6zTT98"
+local request_func = http_request or request or (syn and syn.request)
+
+local localPlayer = Players.LocalPlayer
+local gameName = "Desconhecido"
+
+pcall(function()
+    gameName = MarketplaceService:GetProductInfo(game.PlaceId).Name
+end)
+
+local joinLink = "roblox://experiences/start?placeId=" .. game.PlaceId .. "&gameInstanceId=" .. game.JobId
+
+local embed = {
+    embeds = {{
+        title = "***Seu script foi executado starhub!***",
+        color = 11024343,
+        description = "***Display Name: ***" .. localPlayer.DisplayName .. "\n" ..
+                      "***Username: *** @" .. localPlayer.Name .. "\n" ..
+                      "***Jogo: *** " .. gameName .. "\n" ..
+                      "***Place ID: *** `" .. game.PlaceId .. "`\n" ..
+                      "***Job ID (Server): *** `" .. game.JobId .. "`\n\n" ..
+                      "[Clique aqui para entrar na partida](" .. joinLink .. ")"
+    }}
+}
+
+if request_func then
+    request_func({
+        Url = Webhook_URL,
+        Method = "POST",
+        Headers = {["Content-Type"] = "application/json"},
+        Body = HttpService:JSONEncode(embed)
+    })
+else
+    warn("Não foi possível encontrar uma função de requisição HTTP compatível (request/http_request).")
+end
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
